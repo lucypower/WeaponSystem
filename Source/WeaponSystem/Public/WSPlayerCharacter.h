@@ -1,11 +1,10 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "Logging/LogMacros.h"
-#include "WeaponSystemCharacter.generated.h"
+#include "WSCharacter.h"
+#include "WSPlayerCharacter.generated.h"
 
 class UInputComponent;
 class USkeletalMeshComponent;
@@ -14,13 +13,12 @@ class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-
 UCLASS(config=Game)
-class AWeaponSystemCharacter : public ACharacter
+class WEAPONSYSTEM_API AWSPlayerCharacter : public AWSCharacter
 {
 	GENERATED_BODY()
 
+private:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* Mesh1P;
@@ -36,20 +34,10 @@ class AWeaponSystemCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
-	
-public:
-	AWeaponSystemCharacter();
 
 protected:
 	virtual void BeginPlay();
 
-public:
-		
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
-
-protected:
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
@@ -61,10 +49,15 @@ protected:
 	// End of APawn interface
 
 public:
+
+	AWSPlayerCharacter();
+	
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* LookAction;
 };
-
