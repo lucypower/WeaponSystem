@@ -3,6 +3,8 @@
 #include "WeaponSystemProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "WeaponData.h"
 
 AWeaponSystemProjectile::AWeaponSystemProjectile() 
 {
@@ -37,6 +39,16 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		
+		Destroy();
+	}
+
+	if (OtherActor->ActorHasTag("Dummy"))
+	{
+		AController* PlayerController = GetInstigatorController();
+		TSubclassOf<UDamageType> DamageType = UDamageType::StaticClass();
+		const float WeaponDamage = Weapon.DataTable->FindRow<FWeaponData>("AR", "")->Damage;
+		UGameplayStatics::ApplyDamage(OtherActor, WeaponDamage, PlayerController, this, DamageType);
 
 		Destroy();
 	}
