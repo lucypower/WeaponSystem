@@ -58,7 +58,6 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	}
 }
 
-
 void AWeaponSystemCharacter::Move(const FInputActionValue& Value)
 {
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -79,4 +78,9 @@ void AWeaponSystemCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AWeaponSystemCharacter::ChangeWeaponDamage(float DamageAmount)
+{
+	WeaponDamage = DamageAmount;
 }

@@ -14,12 +14,12 @@
   <component name="ChangeListManager">
     <list default="true" id="7902dc46-103b-4a72-bc2f-3e67ff64ed68" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.WeaponSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WeaponSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/FirstPerson/Blueprints/BP_FirstPersonProjectile.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/FirstPerson/Blueprints/BP_FirstPersonProjectile.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/FirstPerson/Blueprints/BP_PickUp_Rifle.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/FirstPerson/Blueprints/BP_PickUp_Rifle.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/7/8K/0OLPBOSZCPU1X7E3PCLCGF.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/__ExternalActors__/FirstPerson/Maps/FirstPersonMap/7/8K/0OLPBOSZCPU1X7E3PCLCGF.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/WeaponSystem/TP_WeaponComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/WeaponSystem/TP_WeaponComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/WeaponSystem/TP_WeaponComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/WeaponSystem/TP_WeaponComponent.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemCharacter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemProjectile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemProjectile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemProjectile.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/WeaponSystem/WeaponSystemProjectile.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WeaponSystem.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/WeaponSystem.uproject" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,6 +174,7 @@
       <workItem from="1746786338779" duration="397000" />
       <workItem from="1746786755793" duration="4570000" />
       <workItem from="1746793488484" duration="3495000" />
+      <workItem from="1747053483058" duration="1788000" />
     </task>
     <servers />
   </component>

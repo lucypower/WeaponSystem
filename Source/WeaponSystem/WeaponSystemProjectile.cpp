@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "WeaponData.h"
+#include "WeaponSystemCharacter.h"
 
 AWeaponSystemProjectile::AWeaponSystemProjectile() 
 {
@@ -46,9 +47,9 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 	if (OtherActor->ActorHasTag("Dummy"))
 	{
 		AController* PlayerController = GetInstigatorController();
+		AWeaponSystemCharacter* Character = Cast<AWeaponSystemCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		TSubclassOf<UDamageType> DamageType = UDamageType::StaticClass();
-		const float WeaponDamage = Weapon.DataTable->FindRow<FWeaponData>("AR", "")->Damage;
-		UGameplayStatics::ApplyDamage(OtherActor, WeaponDamage, PlayerController, this, DamageType);
+		UGameplayStatics::ApplyDamage(OtherActor, Character->WeaponDamage, PlayerController, this, DamageType);
 
 		Destroy();
 	}

@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "WeaponData.h"
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
@@ -24,6 +25,11 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 void UTP_WeaponComponent::Fire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
+	{
+		return;
+	}
+
+	if (AmmoCount <= 0)
 	{
 		return;
 	}
@@ -45,6 +51,8 @@ void UTP_WeaponComponent::Fire()
 	
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AWeaponSystemProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+			AmmoCount--;
 		}
 	}
 	
@@ -66,14 +74,33 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
-bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter)
+void UTP_WeaponComponent::Reload()
+{
+	AmmoCount = 30;
+}
+
+bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter, float WeaponDamage)
 {
 	Character = TargetCharacter;
 
-	// Check that the character is valid, and has no weapon component yet
-	if (Character == nullptr || Character->GetInstanceComponents().FindItemByClass<UTP_WeaponComponent>())
+	if (Character == nullptr)
 	{
 		return false;
+	}
+
+	if (Character->GetInstanceComponents().FindItemByClass<UTP_WeaponComponent>())
+	{
+		TArray<AActor*> OldWeapon;
+		Character->GetAttachedActors(OldWeapon);
+
+		for (AActor* A : OldWeapon)
+		{
+			if (A->FindComponentByClass<UTP_WeaponComponent>())
+			{
+				A->Destroy();
+				break;
+			}
+		}
 	}
 
 	// Attach the weapon to the First Person Character
@@ -96,8 +123,11 @@ bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter)
 		{
 			// Fire
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
+			EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Reload);
 		}
 	}
+
+	Character->ChangeWeaponDamage(WeaponDamage);
 
 	return true;
 }
