@@ -47,6 +47,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	bool AttachWeapon(AWeaponSystemCharacter* TargetCharacter, float WeaponDamage);
 
+	UFUNCTION(Category="Weapon")
+	bool DetachWeapon(AActor* NewWeapon);
+
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 

@@ -13,6 +13,8 @@
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
 #include "StatComponent.h"
+#include "TP_PickUpComponent.h"
+#include "Kismet/KismetStringLibrary.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -93,7 +95,7 @@ bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter, 
 	}
 
 	if (Character->GetInstanceComponents().FindItemByClass<UTP_WeaponComponent>())
-	{
+	{				
 		TArray<AActor*> OldWeapon;
 		Character->GetAttachedActors(OldWeapon);
 
@@ -101,7 +103,8 @@ bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter, 
 		{
 			if (A->FindComponentByClass<UTP_WeaponComponent>())
 			{
-				A->Destroy();
+				A->GetComponentByClass<UTP_WeaponComponent>()->DetachWeapon(GetOwner());
+				
 				break;
 			}
 		}
@@ -114,25 +117,48 @@ bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter, 
 	// add the weapon as an instance component to the character
 	Character->AddInstanceComponent(this);
 
+	StatComponent->ChangeWeaponStats(WeaponDamage, AmmoCount, MaxAmmoCount);
+
 	// Set up action bindings
 	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
+		{			
 			// Set the priority of the mapping to 1, so that it overrides the Jump action with the Fire action when using touch input
 			Subsystem->AddMappingContext(FireMappingContext, 1);
 		}
 
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
-			// Fire
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
 			EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Reload);
 		}
 	}
+	
+	return true;
+}
 
-	StatComponent->ChangeWeaponStats(WeaponDamage, AmmoCount, MaxAmmoCount);
-
+bool UTP_WeaponComponent::DetachWeapon(AActor* NewWeapon)
+{
+	AActor* Owner = GetOwner();
+	FDetachmentTransformRules DetachmentRules(EDetachmentRule::KeepWorld, true);
+	Owner->DetachFromActor(DetachmentRules);
+	Owner->SetActorLocation(NewWeapon->GetActorLocation());
+	Owner->SetActorRotation(FRotator(0, 0, 0));
+				
+	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
+	{
+		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
+		{
+			EnhancedInputComponent->ClearActionBindings();
+		}
+		
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->RemoveMappingContext(FireMappingContext);
+		}
+	}
+	
 	return true;
 }
 
