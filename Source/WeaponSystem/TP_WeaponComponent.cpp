@@ -9,10 +9,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "WeaponData.h"
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
+#include "StatComponent.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -52,7 +52,6 @@ void UTP_WeaponComponent::Fire()
 			// Spawn the projectile at the muzzle
 			World->SpawnActor<AWeaponSystemProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
-			AmmoCount--;
 		}
 	}
 	
@@ -72,16 +71,21 @@ void UTP_WeaponComponent::Fire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+
+	AmmoCount--;
+	StatComponent->UpdateAmmoCount(AmmoCount);
 }
 
 void UTP_WeaponComponent::Reload()
 {
 	AmmoCount = 30;
+	StatComponent->UpdateAmmoCount(AmmoCount);
 }
 
 bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter, float WeaponDamage)
 {
 	Character = TargetCharacter;
+	StatComponent = Character->GetComponentByClass<UStatComponent>();
 
 	if (Character == nullptr)
 	{
@@ -127,7 +131,7 @@ bool UTP_WeaponComponent::AttachWeapon(AWeaponSystemCharacter* TargetCharacter, 
 		}
 	}
 
-	Character->ChangeWeaponDamage(WeaponDamage);
+	StatComponent->ChangeWeaponStats(WeaponDamage, AmmoCount, MaxAmmoCount);
 
 	return true;
 }

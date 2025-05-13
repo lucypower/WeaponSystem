@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "StatComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
@@ -12,9 +13,7 @@ UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnab
 class WEAPONSYSTEM_API UTP_WeaponComponent : public USkeletalMeshComponent
 {
 	GENERATED_BODY()
-
 	
-
 public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AWeaponSystemProjectile> ProjectileClass;
@@ -40,6 +39,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	int AmmoCount;
 
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	int MaxAmmoCount;
+
 	UTP_WeaponComponent();
 
 	UFUNCTION(BlueprintCallable, Category="Weapon")
@@ -59,4 +61,6 @@ protected:
 private:
 	/** The Character holding this weapon*/
 	AWeaponSystemCharacter* Character;
+
+	UStatComponent* StatComponent;
 };

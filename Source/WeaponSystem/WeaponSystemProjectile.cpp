@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "WeaponSystemProjectile.h"
+
+#include "StatComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -47,9 +49,9 @@ void AWeaponSystemProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 	if (OtherActor->ActorHasTag("Dummy"))
 	{
 		AController* PlayerController = GetInstigatorController();
-		AWeaponSystemCharacter* Character = Cast<AWeaponSystemCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		UStatComponent* StatComponent = Cast<AWeaponSystemCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))->GetComponentByClass<UStatComponent>();		
 		TSubclassOf<UDamageType> DamageType = UDamageType::StaticClass();
-		UGameplayStatics::ApplyDamage(OtherActor, Character->WeaponDamage, PlayerController, this, DamageType);
+		UGameplayStatics::ApplyDamage(OtherActor, StatComponent->WeaponDamage, PlayerController, this, DamageType);
 
 		Destroy();
 	}

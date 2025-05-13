@@ -34,6 +34,7 @@ AWeaponSystemCharacter::AWeaponSystemCharacter()
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
+	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("StatComponent"));
 }
 
 void AWeaponSystemCharacter::BeginPlay()
@@ -78,9 +79,4 @@ void AWeaponSystemCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
-}
-
-void AWeaponSystemCharacter::ChangeWeaponDamage(float DamageAmount)
-{
-	WeaponDamage = DamageAmount;
 }
