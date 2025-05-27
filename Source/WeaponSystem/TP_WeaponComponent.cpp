@@ -151,6 +151,7 @@ bool UTP_WeaponComponent::DetachWeapon(AActor* NewWeapon)
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
 			EnhancedInputComponent->ClearActionBindings();
+			EnhancedInputComponent->ClearActionEventBindings();
 		}
 		
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))

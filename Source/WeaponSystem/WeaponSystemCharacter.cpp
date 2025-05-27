@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -56,6 +57,46 @@ void AWeaponSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	}
+}
+
+void AWeaponSystemCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	LineTrace();
+}
+
+void AWeaponSystemCharacter::LineTrace()
+{
+	FVector StartPos = FirstPersonCameraComponent->GetComponentLocation();
+	FVector ForwardVec = FirstPersonCameraComponent->GetForwardVector();
+	FVector EndPos = StartPos + (ForwardVec * WeaponPickupRange);
+
+	FHitResult OutHit;
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
+	TraceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+
+	TArray<AActor*> IgnoreList;
+	IgnoreList.Add(GetOwner());
+
+	bool Result = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartPos, EndPos, TraceObjectTypes, false,
+		IgnoreList, EDrawDebugTrace::ForOneFrame, OUT OutHit, true);
+	
+	
+	if (Result && !WeaponPickupUI->IsVisible())
+	{
+		WeaponPickupUI->AddToViewport();
+		
+		FString f = FString(OutHit.GetActor()->GetName());
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, f);
+	}
+	else
+	{
+		if (WeaponPickupUI->IsVisible())
+		{
+			WeaponPickupUI->RemoveFromParent();
+		}
 	}
 }
 

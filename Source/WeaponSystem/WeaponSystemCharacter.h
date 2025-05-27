@@ -6,13 +6,16 @@
 #include "StatComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "WeaponSystemCharacter.generated.h"
+
 
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
+class UUserWidget;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -37,6 +40,15 @@ class AWeaponSystemCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	int WeaponPickupRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=UI, meta=(AllowPrivateAccess = "true"))
+	UUserWidget* WeaponPickupUI;
+
+	UFUNCTION()
+	void LineTrace();
 	
 public:
 	AWeaponSystemCharacter();
@@ -57,6 +69,8 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 public:
+	virtual void Tick(float DeltaTime) override;
+	
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
